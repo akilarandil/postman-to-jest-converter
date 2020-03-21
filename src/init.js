@@ -63,8 +63,6 @@ function execute(items, currentDirectory, absolutePath) {
     })
 }
 
-require('axios')
-
 function createTests({request, event, name}, currentDirectory, absolutePath) {
     const requestConfig = {
         url: request.url,
@@ -93,16 +91,16 @@ function createTest(execs) {
 }
 
 function convert(string) {
-    const experession = string.match(/\[(.*?)\]/)[1]
+    const testExpression = string.match(/\[(.*?)\]/)[1]
 
     const assertion = string.match(/=(.+)/)[1]
 
-    return `assert(${assertion}, ${experession})`
+    return `assert(${assertion}, ${testExpression})`
 }
 
 function createTestFile(name, content, currentDirectory) {
-    const beautyfiedData = beautify(content, { indent_size: 2, space_in_empty_paren: true })
-    fs.writeFile(`${currentDirectory}/${name}.spec.js`, beautyfiedData, function (err) {
+    const beautifiedData = beautify(content, {indent_size: 2, space_in_empty_paren: true})
+    fs.writeFile(`${currentDirectory}/${name}.spec.js`, beautifiedData, function (err) {
         if (err) {
             return console.log(err);
         }
