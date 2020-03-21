@@ -40,6 +40,7 @@ describe('${describe}', () => {
 })
 `
 
+makeDirectory('tests')
 const rootDir = `tests/${collection.info.name}`
 makeDirectory(rootDir)
 createVariableFile(rootDir)

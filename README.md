@@ -1,4 +1,4 @@
-# postman-to-jest-
+# postman-to-jest-converter
 
 * Run the following to setup the project
 
