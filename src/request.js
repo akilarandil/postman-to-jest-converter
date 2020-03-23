@@ -1,54 +1,12 @@
-const fs = require('fs');
-const beautify = require('js-beautify').js
-
-let createdFileTotal = 0
-
-function createFile(fileWithDir, content) {
-    const beautifiedData = beautify(content, {indent_size: 2, space_in_empty_paren: true})
-    fs.writeFile(`${fileWithDir}`, beautifiedData, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        createdFileTotal += 1
-        console.log(`${createdFileTotal} - ${fileWithDir} saved`);
-    });
-}
-
-module.exports = {
-    makeDirectory: (dir) => {
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-    },
-    createTestFile: (name, content, currentDirectory) => {
-        createFile(`${currentDirectory}/${name}.spec.js`, content)
-    },
-
-    createVariableFile: (rootdir) => {
-        const content = `const state = {}
-module.exports = {
-    environment: {
-        set: (key, value) => {
-            state[key] = value
-        },
-        get: (key) => state[key],
-        unset: (key) => {
-          delete state[key]
-        }
-    }
-}`
-        createFile(`${rootdir}/pm.js`, content)
-    },
-    createRequestFile: (rootDir) => {
-        const content = `const axios = require('axios')
+const axios = require('axios')
 const pm = require('./pm.js')
 const globals = require('./globals')
 require('dotenv-extended').load();
 
-const variableReplaceRegex = (key) => \`{{$\{key}}}\`
+const variableReplaceRegex = (key) => `{{${key}}}`
 
 function getVariable(variable) {
-    if (variable === 'url_prefix'){
+    if (variable === 'url_prefix') {
         return process.env.url_prefix
     }
     if (globals.hasOwnProperty(variable)) {
@@ -98,7 +56,7 @@ module.exports = {
             url: createUrl(axiosConfig.url),
             data: createBodyWithVariables(axiosConfig.data)
         }
-        console.log(config)
+        console.dir(config)
         const response = await axios.request(config)
         const responseBody = JSON.stringify(response.data)
         const responseCode = {
@@ -110,15 +68,4 @@ module.exports = {
         }
     },
 
-}`
-        createFile(`${rootDir}/request.js`, content)
-    },
-    createGlobalsFile: (rootDir, globals) => {
-        const globalsMap = {}
-        globals.values.forEach(({key, value}) => {
-            globalsMap[key] = value
-        })
-        const content = JSON.stringify(globalsMap)
-        createFile(`${rootDir}/globals.json`, content)
-    }
 }

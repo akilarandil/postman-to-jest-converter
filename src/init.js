@@ -1,22 +1,30 @@
-const filePath = process.argv[2]
+const collectionPath = process.argv[2]
+const globalsPath = process.argv[3]
 const path = require('path');
-const collectionAbsPath = path.resolve(filePath);
+const collectionAbsPath = path.resolve(collectionPath);
 const collection = require(collectionAbsPath)
+
+const globalsAbsPath = path.resolve(globalsPath);
+const globals = require(globalsAbsPath)
 
 const makeDirectory = require('./util').makeDirectory
 const createVariableFile = require('./util').createVariableFile
+const createRequestFile = require('./util').createRequestFile
+const createGlobalsFile = require('./util').createGlobalsFile
 const createTests = require('./generator').createTests
 
-
-makeDirectory('tests')
-
-const rootDir = `tests/${collection.info.name}`
+const rootDir = 'tests'
 makeDirectory(rootDir)
+
+const collectionDir = `${rootDir}/${collection.info.name}`
+makeDirectory(collectionDir)
 createVariableFile(rootDir)
+createRequestFile(rootDir)
+createGlobalsFile(rootDir, globals)
 
 
 collection.item.forEach((item, index) => {
-    const currentDirectory = `${rootDir}/${++index}. ${item.name}`
+    const currentDirectory = `${collectionDir}/${++index}. ${item.name}`
     makeDirectory(currentDirectory)
     const absolutePath = path.resolve(rootDir);
     execute(item.item, currentDirectory, absolutePath)

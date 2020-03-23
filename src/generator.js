@@ -23,20 +23,16 @@ function generateTestExecutions(execs) {
     return testString
 }
 
-const createTestFileContent = (absolutePath, describe, test, requestConfig, allTests, allPreTests) => `const axios = require('axios')
-const assert = require('chai').assert
+const createTestFileContent = (absolutePath, describe, test, requestConfig, allTests, allPreTests) => `const assert = require('chai').assert
 const pm = require('${absolutePath}/pm.js')
+const request = require('${absolutePath}/request.js')
 
 describe('${describe}', () => {
     it('${test}',async () => {
         ${allPreTests ? '//Pre Request\n' + allPreTests + '\n' : ''}
         //Tests
         const requestConfig = ${JSON.stringify(requestConfig)}
-        const response = await axios.request(requestConfig)
-        const responseBody = JSON.stringify(response.data)
-        const responseCode = {
-            code: response.status
-        }
+        const {responseBody, responseCode} = await request.safePromise(requestConfig)
         
         ${allTests ? allTests : ''}
     })
