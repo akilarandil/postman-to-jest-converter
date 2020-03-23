@@ -6,6 +6,6 @@
 
 * Run the following to convert postman json to jest files
 
-    `yarn convert <pathToPostmanJson>`
+    `yarn convert <pathToPostmanCollection> <pathToGlobals>`
     
 All generated files will be saved to `tests` folder under the postman collection's name
