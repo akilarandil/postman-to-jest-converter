@@ -9,7 +9,7 @@
     "convert": "node src/init.js"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chai": "^4.2.0",
     "dotenv-extended": "^2.7.1",
     "jest": "^25.1.0",
